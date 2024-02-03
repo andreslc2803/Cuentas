@@ -1,6 +1,9 @@
+/**
+ * Pruebas para la clase SavingsAccount.
+ */
 package cuentasBancarias;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,37 +12,78 @@ public class TestSavingAccount {
 
 	private SavingsAccount savingsAccount;
 
+	/**
+	 * Configuración inicial antes de cada prueba.
+	 */
 	@BeforeEach
 	public void setUp() {
-		// Configurar el estado inicial antes de cada prueba
 		savingsAccount = new SavingsAccount(1000);
 	}
 
+	/**
+	 * Prueba para verificar el constructor de SavingsAccount.
+	 */
 	@Test
 	public void testConstructor() {
-		// Verificar las postcondiciones del constructor
 		assertEquals(1000, savingsAccount.getBalance());
 		assertEquals('S', savingsAccount.getAccountType());
 		assertEquals(0, savingsAccount.getTotalInterest());
 	}
-	
+
+	/**
+	 * Prueba para verificar el cálculo correcto de intereses y el balance después
+	 * de acreditar intereses.
+	 */
 	@Test
 	public void testCreditInterest() {
-		// Configurar el estado inicial según sea necesario
-		savingsAccount.setBalance(2000); // Saldo inicial de 2000
-		float interestRate = 0.05f; // Tasa de interés del 5% (la f significa que es un float)
+		savingsAccount.setBalance(2000);
+		float interestRate = 0.05f;
 
-		// Invocar el método que se va a probar
 		savingsAccount.creditInterest(interestRate);
 
-		// Verificar las postcondiciones
-		assertEquals(2000 * interestRate, savingsAccount.getTotalInterest()); // Comprobar que totalInterest se																// incrementa correctamente
-		assertEquals(2000 + (2000 * interestRate), savingsAccount.getBalance()); // Comprobar que el depósito se realiza
-																					// correctamente
+		assertEquals(2000 * interestRate, savingsAccount.getTotalInterest());
+		assertEquals(2000 + (2000 * interestRate), savingsAccount.getBalance());
 	}
-	
+
+	/**
+	 * Prueba para verificar la retirada exitosa de fondos.
+	 */
 	@Test
 	public void testWithDraw() {
-		assertEquals(true, savingsAccount.withdraw(2000));
+		float withdrawAmount = 800f;
+		savingsAccount.setBalance(20000);
+		assertTrue(savingsAccount.withdraw(withdrawAmount));
+	}
+
+	/**
+	 * Prueba para verificar el depósito y la actualización correcta del balance.
+	 */
+	@Test
+	void testDeposit() {
+		savingsAccount.setBalance(1000);
+		savingsAccount.deposit(500);
+		assertEquals(1500, savingsAccount.getBalance());
+	}
+
+	/**
+	 * Prueba para verificar la retirada con saldo suficiente y la actualización
+	 * correcta del balance.
+	 */
+	@Test
+	void testWithdrawSufficientBalance() {
+		savingsAccount.setBalance(1000);
+		assertTrue(savingsAccount.withdraw(500));
+		assertEquals(500, savingsAccount.getBalance());
+	}
+
+	/**
+	 * Prueba para verificar la retirada sin saldo suficiente y la no actualización
+	 * del balance.
+	 */
+	@Test
+	void testWithdrawInsufficientBalance() {
+		savingsAccount.setBalance(500);
+		assertFalse(savingsAccount.withdraw(1000));
+		assertEquals(500, savingsAccount.getBalance());
 	}
 }

@@ -101,7 +101,7 @@ public class BankAccount {
 			balance -= withdrawAmount;
 			return true;
 		}
-	}
+	} 
 
 	public float getBalance() {
 		return balance;
